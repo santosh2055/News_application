@@ -1,28 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class NewsTile extends StatelessWidget {
-  final String? imgUrl, title, desc, content;
+  final String? imgUrl, title, desc, content,posturl;
 
   NewsTile({
     this.imgUrl,
     this.desc,
     this.title,
     this.content,
-    // required this.posturl,
+    required this.posturl,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => ArticleView(
-        //       postUrl: posturl!,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArticleView(
+              postUrl: posturl!,
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
@@ -78,44 +81,44 @@ class NewsTile extends StatelessWidget {
   }
 }
 
-// class ArticleView extends StatefulWidget {
-//   final String postUrl;
-//   ArticleView({required this.postUrl});
+class ArticleView extends StatefulWidget {
+  final String postUrl;
+  ArticleView({required this.postUrl});
 
-//   @override
-//   _ArticleViewState createState() => _ArticleViewState();
-// }
+  @override
+  _ArticleViewState createState() => _ArticleViewState();
+}
 
-// class _ArticleViewState extends State<ArticleView> {
-//   final Completer<WebViewController> _controller =
-//       Completer<WebViewController>();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(
-//           onPressed: () {
-//             Navigator.of(context).pushNamed('/NewsScreen');
-//           },
-//           icon: Icon(
-//             Icons.arrow_back,
-//             color: Colors.black,
-//           ),
-//         ),
-//         title: NewsScreenAppBar(),
-//         backgroundColor: Colors.transparent,
-//         elevation: 0.0,
-//       ),
-//       body: Container(
-//         height: MediaQuery.of(context).size.height,
-//         width: MediaQuery.of(context).size.width,
-//         child: WebView(
-//           initialUrl: widget.postUrl,
-//           onWebViewCreated: (WebViewController webViewController) {
-//             _controller.complete(webViewController);
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
+class _ArticleViewState extends State<ArticleView> {
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/NewsScreen');
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        // title: NewsScreenAppBar(),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: WebView(
+          initialUrl: widget.postUrl,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+        ),
+      ),
+    );
+  }
+}

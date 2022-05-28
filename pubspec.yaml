@@ -39,7 +39,8 @@ dependencies:
   equatable: ^2.0.3
   flutter_web_browser: "^0.17.1"
   google_fonts: ^3.0.1
-
+  webview_flutter: 
+  cached_network_image:
 
 
 

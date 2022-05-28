@@ -1,12 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:news_app/blocs/newsbloc/news_bloc.dart';
 
 import '../blocs/newsbloc/news_states.dart';
 import '../components/news_tile.dart';
-import '../components/search_header.dart';
 import '../models/article_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               title: _articleList[index].title ?? "",
                               desc: _articleList[index].description ?? "",
                               content: _articleList[index].content ?? "",
-                              // posturl: _articleList[index].articleUrl ?? "",
+                              posturl: _articleList[index].url?? "",
                             )),
                   );
                 } else if (state is NewsErrorState) {
