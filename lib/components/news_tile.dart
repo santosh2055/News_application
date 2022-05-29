@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:news_app/components/network_image.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class NewsTile extends StatelessWidget {
-  final String? imgUrl, title, desc, content,posturl;
+  final String? imgUrl, title, desc, content, posturl;
 
   NewsTile({
     this.imgUrl,
@@ -16,64 +17,78 @@ class NewsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ArticleView(
-              postUrl: posturl!,
-            ),
+            builder: (context) =>
+                ArticleView(postUrl: posturl!, title: title.toString()),
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-        width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Container(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            alignment: Alignment.bottomCenter,
-            decoration:const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(6),
-                    bottomLeft: Radius.circular(6))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: imgUrl!.isNotEmpty
-                      ? Image.network(
-                          imgUrl!,
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(),
-                ),
-               const SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  title!,
-                  maxLines: 2,
-                  style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
-                ),
-               const SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  desc!,
-                  maxLines: 2,
-                  style: const TextStyle(color: Colors.black54, fontSize: 14),
-                )
-              ],
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          alignment: Alignment.bottomCenter,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.grey.withOpacity(.5),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(.5).withOpacity(.4),
+                spreadRadius: .5,
+                offset: const Offset(0, 2),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              displayNetworkImageWithErrorControl(
+                  borderRadius: 10,
+                  imageHeight: 160,
+                  imageWidth: _size.width,
+                  imageName: imgUrl.toString(),
+                  fit: BoxFit.cover),
+              const SizedBox(
+                height: 12,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title!,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      desc!.length > 100
+                          ? desc.toString().substring(0, 100) + '....'
+                          : desc.toString() + '....',
+                      textAlign: TextAlign.justify,
+                      style:
+                          const TextStyle(color: Colors.black54, fontSize: 14),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -83,7 +98,8 @@ class NewsTile extends StatelessWidget {
 
 class ArticleView extends StatefulWidget {
   final String postUrl;
-  ArticleView({required this.postUrl});
+  final String title;
+  ArticleView({required this.postUrl, required this.title});
 
   @override
   _ArticleViewState createState() => _ArticleViewState();
@@ -96,24 +112,38 @@ class _ArticleViewState extends State<ArticleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Text(
+              'Details News',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ),
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/NewsScreen');
+            Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.black,
           ),
         ),
         // title: NewsScreenAppBar(),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        elevation: 2.0,
+        backgroundColor: Colors.grey[300],
       ),
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: WebView(
           initialUrl: widget.postUrl,
+          onProgress: (int progress) {
+            const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },

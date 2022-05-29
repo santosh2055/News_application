@@ -37,10 +37,10 @@ dependencies:
   http: ^0.13.4
   flutter_bloc: ^7.1.0
   equatable: ^2.0.3
-  flutter_web_browser: "^0.17.1"
   google_fonts: ^3.0.1
   webview_flutter: 
   cached_network_image:
+  shimmer: ^2.0.0
 
 
 

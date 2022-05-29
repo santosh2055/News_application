@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_app/blocs/newsbloc/news_states.dart';
 import 'package:news_app/repositories/news_repository.dart';
-import 'package:news_app/views/home_screen.dart';
+import 'package:news_app/screens/home_screen.dart';
+import 'blocs/news_category_bloc/bloc.dart';
+import 'blocs/news_category_bloc/state.dart';
 import 'blocs/newsbloc/news_bloc.dart';
 
 void main() {
@@ -22,7 +24,15 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider<NewsBloc>(
           create: (context) => NewsBloc(
-              initialState: NewsInitState(), newsRepositoty: NewsRepository()),
+            initialState: NewsInitState(),
+            newsRepositoty: NewsRepository(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SearchBloc(
+            initialState: NewsSearchInitState(),
+            serchRepositry: SerchRepositry(),
+          ),
         )
       ],
       child: MaterialApp(
@@ -32,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             textTheme: GoogleFonts.poppinsTextTheme(
               Theme.of(context).textTheme,
             )),
-        home: HomeScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
