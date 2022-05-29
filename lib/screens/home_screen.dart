@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:news_app/blocs/newsbloc/news_bloc.dart';
+import 'package:news_app/utils/themes/app_theme.dart';
 
 import '../blocs/news_category_bloc/bloc.dart';
 import '../blocs/news_category_bloc/event.dart';
 import '../blocs/newsbloc/news_states.dart';
+import '../blocs/theme/themek_bloc.dart';
 import '../components/network_image.dart';
 import '../components/news_tile.dart';
 import '../models/article_model.dart';
@@ -23,6 +25,8 @@ class HomeScreen extends StatefulWidget {
 List<CategorieModel> categories = <CategorieModel>[];
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isdark = true;
+
   @override
   void initState() {
     categories = getCategories();
@@ -36,8 +40,40 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFFf6501c),
-          title: const Center(child: Text('News App')),
+          // backgroundColor: const Color(0xFFf6501c),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[
+              Text(
+                'News',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "APP",
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              )
+            ],
+          ),
+          actions: [
+            Switch(
+              activeColor: Colors.white,
+              value: isdark,
+              onChanged: (val) async {
+                setState(() {
+                  _setTheme(
+                    val,
+                  );
+                });
+
+                isdark = !isdark;
+              },
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -122,9 +158,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   } else if (state is NewsErrorState) {
-                    String error = state.errorMessage;
+                    // String error = state.errorMessage;
 
-                    return Center(child: Text(error));
+                    return const Center(
+                      child: Text('Ops Something went Wrong'),
+                    );
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -137,5 +175,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  _setTheme(bool darkTheme) async {
+    AppTheme selectedTheme =
+        darkTheme ? AppTheme.lightTheme : AppTheme.darkTheme;
+    context.read<ThemekBloc>().add(ThemekEvent(appTheme: selectedTheme));
   }
 }

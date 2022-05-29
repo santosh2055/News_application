@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:news_app/utils/constant.dart';
 import '../models/article_model.dart';
 
 class NewsRepository {
-  String url =
-      'https://newsapi.org/v2/top-headlines?country=us&category=technology&apiKey=2487b0d2eeb14f6baae57be6742abb44';
+  String url = '';
 
   Future<List<ArticleModel>?> fetchNews() async {
     try {
       var response = await http.get(
-        Uri.parse(url),
+        Uri.parse(Urlist().fetchNews),
       );
       var data = jsonDecode(response.body);
       List<ArticleModel> articleModelList = [];
@@ -28,19 +28,16 @@ class NewsRepository {
     }
     return null;
   }
-
-  
 }
 
-class SerchRepositry{
+class SerchRepositry {
   Future<List<ArticleModel>?> fetchCategoryNews(String category) async {
     try {
       var response = await http.get(
-        Uri.parse(
-            "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=2487b0d2eeb14f6baae57be6742abb44"),
+        Uri.parse('$baseUrl&category=$category&apiKey=$apiKey'),
       );
       var data = jsonDecode(response.body);
-      // log('ddddgjjgjg${response.request}');
+      log('ddrequestdd${response.request}');
 
       List<ArticleModel> categoryNews = [];
       if (response.statusCode == 200) {

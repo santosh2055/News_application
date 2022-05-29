@@ -1,4 +1,5 @@
-import 'dart:developer';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/news_category_bloc/bloc.dart';
@@ -9,7 +10,7 @@ import '../models/article_model.dart';
 class CategoryNews extends StatefulWidget {
   final String newsCategory;
 
-  CategoryNews({required this.newsCategory});
+  const CategoryNews({Key? key, required this.newsCategory}) : super(key: key);
 
   @override
   _CategoryNewsState createState() => _CategoryNewsState();
@@ -18,19 +19,27 @@ class CategoryNews extends StatefulWidget {
 class _CategoryNewsState extends State<CategoryNews> {
   @override
   Widget build(BuildContext context) {
-    final newsBloc = BlocProvider.of<SearchBloc>(context);
-
+    BlocProvider.of<SearchBloc>(context);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Text(
-              "Flutter",
-              style:
-                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+              widget.newsCategory,
+              style: const TextStyle(
+                  color: Colors.black87, fontWeight: FontWeight.w600),
             ),
-            Text(
+            const Text(
               "News",
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
             )
@@ -40,10 +49,11 @@ class _CategoryNewsState extends State<CategoryNews> {
           Opacity(
             opacity: 0,
             child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: const Icon(
-                  Icons.share,
-                )),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: const Icon(
+                Icons.share,
+              ),
+            ),
           )
         ],
         backgroundColor: Colors.transparent,
@@ -52,7 +62,6 @@ class _CategoryNewsState extends State<CategoryNews> {
       body: SingleChildScrollView(
         child: BlocBuilder<SearchBloc, SearchStates>(
           builder: (context, state) {
-            log('dddddd${state.props}}');
             if (state is NewsSearchInitState) {
               const Center(
                 child: CircularProgressIndicator(),
@@ -69,7 +78,7 @@ class _CategoryNewsState extends State<CategoryNews> {
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       return NewsTile(
-                        imgUrl: serchArticleList[index].urlToImage ?? "",
+                        imgUrl: serchArticleList[index].urlToImage,
                         title: serchArticleList[index].title ?? "",
                         desc: serchArticleList[index].description ?? "",
                         content: serchArticleList[index].content ?? "",
@@ -78,7 +87,7 @@ class _CategoryNewsState extends State<CategoryNews> {
                     }),
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

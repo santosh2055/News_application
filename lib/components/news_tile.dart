@@ -17,7 +17,7 @@ class NewsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -54,7 +54,7 @@ class NewsTile extends StatelessWidget {
               displayNetworkImageWithErrorControl(
                   borderRadius: 10,
                   imageHeight: 160,
-                  imageWidth: _size.width,
+                  imageWidth: size.width,
                   imageName: imgUrl.toString(),
                   fit: BoxFit.cover),
               const SizedBox(
@@ -69,21 +69,17 @@ class NewsTile extends StatelessWidget {
                     Text(
                       title!,
                       maxLines: 2,
-                      style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                     const SizedBox(
-                      height: 4,
+                      height: 5,
                     ),
                     Text(
                       desc!.length > 100
-                          ? desc.toString().substring(0, 100) + '....'
-                          : desc.toString() + '....',
+                          ? '${desc.toString().substring(0, 100)}....'
+                          : '$desc....',
                       textAlign: TextAlign.justify,
-                      style:
-                          const TextStyle(color: Colors.black54, fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyText2!,
                     )
                   ],
                 ),
@@ -112,14 +108,19 @@ class _ArticleViewState extends State<ArticleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Text(
-              'Details News',
-              style: TextStyle(color: Colors.black),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const <Widget>[
+            Text(
+              'Details',
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
             ),
-          ),
+            Text(
+              "News",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+            )
+          ],
         ),
         leading: IconButton(
           onPressed: () {
@@ -130,7 +131,6 @@ class _ArticleViewState extends State<ArticleView> {
             color: Colors.black,
           ),
         ),
-        // title: NewsScreenAppBar(),
         elevation: 2.0,
         backgroundColor: Colors.grey[300],
       ),
